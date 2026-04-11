@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.github.sbabcoc'
+description = 'Now In Tests'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+  mavenCentral()
+}
+
+tasks.named('clean') {
+  delete 'logs', 'target'
+}
+
+dependencies {
+    implementation 'com.nordstrom.ui-tools:selenium-foundation:33.4.1-s4'
+    implementation('io.appium:java-client:10.0.0') {
+      exclude group: 'org.seleniumhq.selenium', module: 'selenium-java'
+      exclude group: 'org.seleniumhq.selenium', module: 'selenium-support'
+      exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    testImplementation 'org.slf4j:slf4j-simple:2.0.13'
+}
+
+test {
+    useTestNG() {
+        listeners << 'com.nordstrom.automation.testng.ListenerChain'
+    }
+    
+    // Ensure the console shows test output
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
