@@ -1,5 +1,23 @@
-# Ignore Gradle project-specific cache directory
-.gradle
-
-# Ignore Gradle build output directory
-build
+.settings
+target/
+target-*/
+.classpath
+.project
+*~
+*.tmproj
+*.iml
+.idea/
+*.md.html
+logs/
+logs-*/
+.gradle/
+build/
+build-*/
+gradle/
+gradlew
+gradlew.bat
+/bin/
+test-output/
+.DS_Store
+.vscode/
+*.json
