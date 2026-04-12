@@ -31,11 +31,10 @@ dependencies {
 
 test {
     useTestNG() {
-        listeners << 'com.nordstrom.automation.testng.ListenerChain'
+      useDefaultListeners = true
     }
-    
-    // Ensure the console shows test output
     testLogging {
-        events "passed", "skipped", "failed"
+      showStandardStreams = true
+      events "passed", "skipped", "failed"
     }
 }
