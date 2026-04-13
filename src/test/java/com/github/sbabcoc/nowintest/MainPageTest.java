@@ -38,8 +38,17 @@ public class MainPageTest extends TestNgBase {
         ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         assertTrue(forYouFeed.isDisplayed(), "'For You' feed is not shown");
-        Set<String> topicsMap = forYouFeed.getTopics();
+        Set<String> topicsMap = forYouFeed.getAllTopics();
         assertFalse(topicsMap.isEmpty(), "'For You' feed has no topics");
+    }
+    
+    @Test
+    public void testSelectHeadlinesTopic() {
+        MainPage mainPage = getInitialPage();
+        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
+        ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
+        forYouFeed.getTopicSelection("Headlines").select();
+        forYouFeed.getFirstNewsResourceCard().openResource();
     }
     
 }

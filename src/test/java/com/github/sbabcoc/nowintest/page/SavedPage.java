@@ -48,4 +48,14 @@ public class SavedPage extends PageTemplate {
     public boolean isBookmarksPlaceholderShown() {
         return !findElements(Using.BOOKMARKS_EMPTY).isEmpty();
     }
+    
+    private static By scrollingLocatorWithResourceId(final String resourceId) {
+        return AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(\""
+                        + resourceId + "\"))");
+    }
+    
+    private static By contextLocatorWithResourceId(final String resourceId) {
+        return AppiumBy.xpath("//*[@resource-id='" + resourceId + "']/parent::*");
+    }
 }

@@ -1,16 +1,29 @@
 package com.github.sbabcoc.nowintest.components;
 
+import java.util.Arrays;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebElement;
 
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
+import com.nordstrom.automation.selenium.model.RobustWebElement;
 
 public class TopicSelection extends PageComponent {
     
-    public TopicSelection(By locator, ComponentContainer parent) {
-        super(locator, parent);
-    }
+    private Class<?>[] argumentTypes;
+    private Object[] arguments;
     
+    private static final Class<?>[] ARG_TYPES = {By.class, RobustWebElement.class, ComponentContainer.class};
+    
+    public TopicSelection(By scrollingLocator, RobustWebElement contextElement, ComponentContainer parent) {
+        super(contextElement, parent);
+        
+        this.argumentTypes = ARG_TYPES;
+        this.arguments = new Object[] {scrollingLocator, contextElement, parent};
+    }
+
     /**
      * This enumeration defines element locator constants.
      */
@@ -31,6 +44,33 @@ public class TopicSelection extends PageComponent {
         }
     }
     
+    @Override
+    public SearchContext refreshContext(long expiration) {
+        // if this context is past the expiration
+        if (expiration >= acquiredAt()) {
+            // reveal this topic selection
+            reveal();
+            // continue with standard refresh
+            super.refreshContext(expiration);
+        }
+        return this;
+    }
+    
+    @Override
+    public Class<?>[] getArgumentTypes() {
+        return Arrays.copyOf(argumentTypes, argumentTypes.length);
+    }
+    
+    @Override
+    public Object[] getArguments() {
+        return Arrays.copyOf(arguments, arguments.length);
+    }
+    
+    public WebElement reveal() {
+        getParentPage().findElement((By) arguments[0]);
+        return getWrappedElement();
+    }
+
     public String getTitle() {
         return findElement(Using.TOPIC_TITLE).getText();
     }

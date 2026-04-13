@@ -1,10 +1,13 @@
 package com.github.sbabcoc.nowintest.components;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -18,6 +21,7 @@ import io.appium.java_client.AppiumBy;
 public class ForYouFeedComponent extends PageComponent {
 
     private Set<String> topics;
+    private Map<String, TopicSelection> topicMap = new HashMap<>();
 
     public ForYouFeedComponent(By locator, ComponentContainer parent) {
         super(locator, parent);
@@ -30,7 +34,8 @@ public class ForYouFeedComponent extends PageComponent {
         /**  */
         TOPIC_CHECKBOX(By.xpath(".//*[@content-desc]")),
         SCROLL_FORWARD(AppiumBy.androidUIAutomator(
-            "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList().scrollForward()"));
+            "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList().scrollForward()")),
+        NEWS_RESOURCE_CARD(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^newsResourceCard:.*\")"));
         
         private final By locator;
         
@@ -44,7 +49,15 @@ public class ForYouFeedComponent extends PageComponent {
         }
     }
     
-    public Set<String> getTopics() {
+    public NewsResourceCard getFirstNewsResourceCard() {
+        WebElement card = findElement(Using.NEWS_RESOURCE_CARD);
+        String resourceId = card.getAttribute("resource-id");
+        By locator = scrollingLocatorWithResourceId(resourceId);
+        RobustWebElement element = (RobustWebElement) getParentPage().findElement(locator);
+        return new NewsResourceCard(element, this);
+    }
+    
+    public Set<String> getAllTopics() {
         if (topics == null) {
             reset();
             String lastSnapshot = "";
@@ -60,9 +73,32 @@ public class ForYouFeedComponent extends PageComponent {
         }
         return Collections.unmodifiableSet(topics);
     }
-
-    public RobustWebElement scrollToItem(String title) {
-        return (RobustWebElement) findElement(locatorFor(title));
+    
+    public TopicSelection getTopicSelection(final String topic) {
+        TopicSelection topicSelection = null;
+        if (!getAllTopics().contains(topic)) {
+            throw new IllegalArgumentException("Unrecognized topic: " + topic);
+        }
+        if (topicMap.containsKey(topic)) {
+            topicSelection = topicMap.get(topic);
+            topicSelection.reveal();
+        } else {
+            By scrollingLocator = scrollingLocatorWithDescription(topic);
+            By contextLocator = contextLocatorWithDescription(topic);
+            getParentPage().findElement(scrollingLocator);
+            
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new NoSuchElementException("Interrupted during settle time pause");
+            }
+            
+            RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
+            topicSelection = new TopicSelection(scrollingLocator, contextElement, this);
+            topicMap.put(topic, topicSelection);
+        }
+        return topicSelection;
     }
 
     private void collectVisible() {
@@ -97,9 +133,23 @@ public class ForYouFeedComponent extends PageComponent {
         getParentPage().findElement(Using.SCROLL_FORWARD);
     }
     
-    private static By locatorFor(final String topic) {
+    private static By scrollingLocatorWithDescription(final String description) {
         return AppiumBy.androidUIAutomator(
-                "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList()" +
-                ".scrollIntoView(new UiSelector().fromParent(new UiSelector().description(\"" + topic + "\")))");
+                "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().description(\""
+                        + description + "\"))");
+    }
+    
+    private static By contextLocatorWithDescription(final String description) {
+        return AppiumBy.xpath("//*[@content-desc='" + description + "']/parent::*");
+    }
+    
+    private static By scrollingLocatorWithResourceId(final String resourceId) {
+        return AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(\""
+                        + resourceId + "\"))");
+    }
+    
+    private static By contextLocatorWithResourceId(final String resourceId) {
+        return AppiumBy.xpath("//*[@resource-id='" + resourceId + "']/parent::*");
     }
 }

@@ -1,14 +1,18 @@
 package com.github.sbabcoc.nowintest.page;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
+import com.github.sbabcoc.nowintest.components.TopicSelection;
 import com.google.common.collect.ImmutableMap;
 import com.nordstrom.automation.selenium.model.RobustWebElement;
 
@@ -20,6 +24,7 @@ import io.appium.java_client.AppiumBy;
 public class InterestsPage extends PageTemplate {
     
     private Set<String> topics;
+    private Map<String, TopicSelection> topicMap = new HashMap<>();
 
     /**
      * Constructor for main view context.
@@ -75,8 +80,31 @@ public class InterestsPage extends PageTemplate {
         return Collections.unmodifiableSet(topics);
     }
 
-    public RobustWebElement scrollToItem(String title) {
-        return (RobustWebElement) findElement(locatorFor(title));
+    public TopicSelection getTopicSelection(final String topic) {
+        TopicSelection topicSelection = null;
+        if (!getTopics().contains(topic)) {
+            throw new IllegalArgumentException("Unrecognized topic: " + topic);
+        }
+        if (topicMap.containsKey(topic)) {
+            topicSelection = topicMap.get(topic);
+            topicSelection.reveal();
+        } else {
+            By scrollingLocator = scrollingLocatorWithDescription(topic);
+            By contextLocator = contextLocatorWithDescription(topic);
+            getParentPage().findElement(scrollingLocator);
+            
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new NoSuchElementException("Interrupted during settle time pause");
+            }
+            
+            RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
+            topicSelection = new TopicSelection(scrollingLocator, contextElement, this);
+            topicMap.put(topic, topicSelection);
+        }
+        return topicSelection;
     }
 
     private void collectVisible() {
@@ -111,9 +139,14 @@ public class InterestsPage extends PageTemplate {
         getParentPage().findElement(Using.SCROLL_FORWARD.locator);
     }
     
-    private static By locatorFor(final String topic) {
+    private static By scrollingLocatorWithDescription(final String description) {
         return AppiumBy.androidUIAutomator(
-                "new UiScrollable(new UiSelector().scrollable(true)).setAsVerticalList()" +
-                ".scrollIntoView(new UiSelector().fromParent(new UiSelector().description(\"" + topic + "\")))");
+                "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().description(\""
+                        + description + "\"))");
     }
+    
+    private static By contextLocatorWithDescription(final String description) {
+        return AppiumBy.xpath("//*[@content-desc='" + description + "']/parent::*");
+    }
+    
 }
