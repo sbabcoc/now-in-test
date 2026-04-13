@@ -1,9 +1,13 @@
 package com.github.sbabcoc.nowintest;
 
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
+import com.github.sbabcoc.nowintest.components.ForYouFeedComponent;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
 import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
@@ -23,9 +27,19 @@ public class MainPageTest extends TestNgBase {
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
         ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
-        assertTrue(mainPage.getTabBar().isForYouTabShown(), "'For you' tab is not displayed");
-        assertTrue(mainPage.getTabBar().isSavedTabShown(), "'Saved' tab is not displayed");
-        assertTrue(mainPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not displayed");
+        assertTrue(mainPage.getTabBar().isForYouTabShown(), "'For you' tab is not shown");
+        assertTrue(mainPage.getTabBar().isSavedTabShown(), "'Saved' tab is not shown");
+        assertTrue(mainPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not shown");
+    }
+    
+    @Test
+    public void testForYouFeedIsShownAndPopulated() {
+        MainPage mainPage = getInitialPage();
+        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
+        ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
+        assertTrue(forYouFeed.isDisplayed(), "'For You' feed is not shown");
+        Set<String> topicsMap = forYouFeed.getTopics();
+        assertFalse(topicsMap.isEmpty(), "'For You' feed has no topics");
     }
     
 }

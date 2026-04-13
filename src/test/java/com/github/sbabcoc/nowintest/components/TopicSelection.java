@@ -5,9 +5,9 @@ import org.openqa.selenium.By;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
 
-public class ForYouTopicSelection extends PageComponent {
+public class TopicSelection extends PageComponent {
     
-    public ForYouTopicSelection(By locator, ComponentContainer parent) {
+    public TopicSelection(By locator, ComponentContainer parent) {
         super(locator, parent);
     }
     

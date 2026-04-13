@@ -2,11 +2,13 @@ package com.github.sbabcoc.nowintest.components;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
+
+import com.google.common.collect.ImmutableMap;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
 import com.nordstrom.automation.selenium.model.RobustWebElement;
@@ -15,8 +17,7 @@ import io.appium.java_client.AppiumBy;
 
 public class ForYouFeedComponent extends PageComponent {
 
-    private Set<String> interestTitles;
-    private Map<Object, ForYouTopicSelection> selectionsMap; 
+    private Set<String> topics;
 
     public ForYouFeedComponent(By locator, ComponentContainer parent) {
         super(locator, parent);
@@ -27,10 +28,7 @@ public class ForYouFeedComponent extends PageComponent {
      */
     protected enum Using implements ByEnum {
         /**  */
-        //TOPIC_SELECTION_LIST(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"forYou:topicSelection\")")),
         TOPIC_CHECKBOX(By.xpath(".//*[@content-desc]")),
-        SCROLL_BACKWARD(AppiumBy.androidUIAutomator(
-            "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList().scrollBackward()")),
         SCROLL_FORWARD(AppiumBy.androidUIAutomator(
             "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList().scrollForward()"));
         
@@ -46,29 +44,21 @@ public class ForYouFeedComponent extends PageComponent {
         }
     }
     
-    public Map<Object, ForYouTopicSelection> getSelectionsMap() {
-        if (selectionsMap == null) {
-            selectionsMap = getInterestTitles().stream()
-                    .collect(Collectors.toMap(s -> s, s -> new ForYouTopicSelection(locatorFor(s), this)));
-        }
-        return selectionsMap;
-    }
-    
-    public Set<String> getInterestTitles() {
-        if (interestTitles == null) {
+    public Set<String> getTopics() {
+        if (topics == null) {
             reset();
             String lastSnapshot = "";
-            interestTitles = new LinkedHashSet<>();
+            topics = new LinkedHashSet<>();
             while (true) {
                 collectVisible();
-                String snapshot = interestTitles.toString();
+                String snapshot = topics.toString();
                 if (snapshot.equals(lastSnapshot)) break;
                 lastSnapshot = snapshot;
                 scrollForward();
             }
             reset();
         }
-        return Collections.unmodifiableSet(interestTitles);
+        return Collections.unmodifiableSet(topics);
     }
 
     public RobustWebElement scrollToItem(String title) {
@@ -79,27 +69,32 @@ public class ForYouFeedComponent extends PageComponent {
         findElements(Using.TOPIC_CHECKBOX).stream()
                 .map(e -> e.getAttribute("content-desc"))
                 .filter(s -> s != null)
-                .forEach(interestTitles::add);
+                .forEach(topics::add);
     }
 
     public void reset() {
-        int maxAttempts = 3;
-        By headlines = AppiumBy.xpath(".//*[@text='Headlines' or @content-desc='Headlines']");
+        int maxTries = 10;
+        WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        while (true) {
+            boolean isFound = container.findElements(AppiumBy.accessibilityId("Headlines"))
+                    .stream()
+                    .anyMatch(WebElement::isDisplayed);
 
-        while (maxAttempts > 0) {
-            // If Headlines is visible, we are done
-            if (!getParentPage().findElements(headlines).isEmpty()) {
+            if (isFound || --maxTries <= 0) {
                 break;
             }
 
-            // Otherwise, send a strong backward scroll command
-            getParentPage().findElement(Using.SCROLL_BACKWARD);
-            maxAttempts--;
+            ((JavascriptExecutor) driver).executeScript("mobile: swipeGesture", ImmutableMap.of(
+                "elementId", ((RemoteWebElement) container).getId(),
+                "direction", "right",
+                "percent", 1.0,
+                "speed", 1500
+            ));
         }
     }
 
     private void scrollForward() {
-        getParentPage().findElement(Using.SCROLL_FORWARD.locator);
+        getParentPage().findElement(Using.SCROLL_FORWARD);
     }
     
     private static By locatorFor(final String topic) {

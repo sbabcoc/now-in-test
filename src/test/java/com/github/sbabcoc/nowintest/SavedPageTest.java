@@ -32,4 +32,12 @@ public class SavedPageTest extends TestNgBase {
         assertTrue(savedPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not displayed");
     }
     
+    @Test
+    public void testEmptyBookmarks() {
+        MainPage mainPage = getInitialPage();
+        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
+        SavedPage savedPage = mainPage.getTabBar().openSavedPage();
+        assertTrue(savedPage.isBookmarksPlaceholderShown(), "Bookmarks placeholder is not shown");
+    }
+    
 }
