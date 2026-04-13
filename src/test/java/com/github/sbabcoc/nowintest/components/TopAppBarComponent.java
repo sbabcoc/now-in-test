@@ -2,10 +2,11 @@ package com.github.sbabcoc.nowintest.components;
 
 import org.openqa.selenium.By;
 
+import com.nordstrom.automation.selenium.interfaces.DetectsLoadCompletion;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
 
-public class TopAppBarComponent extends PageComponent {
+public class TopAppBarComponent extends PageComponent implements DetectsLoadCompletion<TopAppBarComponent> {
 
     public TopAppBarComponent(By locator, ComponentContainer parent) {
         super(locator, parent);
@@ -29,6 +30,11 @@ public class TopAppBarComponent extends PageComponent {
         public By locator() {
             return locator;
         }
+    }
+
+    @Override
+    public boolean isLoadComplete() {
+        return true;
     }
     
 }

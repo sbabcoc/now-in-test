@@ -23,9 +23,9 @@ public class MainPageTest extends TestNgBase {
     public void testNavigationTabsAreShown() {
         MainPage page = getInitialPage();
         ContainerMethodInterceptor.waitForLoadCompletion(page);
-        assertTrue(page.isForYouTabShown(), "'For you' tab is not displayed");
-        assertTrue(page.isSavedTabShown(), "'Saved' tab is not displayed");
-        assertTrue(page.isInterestsTabShown(), "'Interests' tab is not displayed");
+        assertTrue(page.getTabBar().isForYouTabShown(), "'For you' tab is not displayed");
+        assertTrue(page.getTabBar().isSavedTabShown(), "'Saved' tab is not displayed");
+        assertTrue(page.getTabBar().isInterestsTabShown(), "'Interests' tab is not displayed");
     }
     
 }
