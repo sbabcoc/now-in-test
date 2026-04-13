@@ -44,4 +44,8 @@ public class SavedPage extends PageTemplate {
     public By usingViewTitle() {
         return Using.VIEW_TITLE.locator;
     }
+    
+    public boolean isBookmarksPlaceholderShown() {
+        return !findElements(Using.BOOKMARKS_EMPTY).isEmpty();
+    }
 }

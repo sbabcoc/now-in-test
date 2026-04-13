@@ -1,0 +1,9 @@
+<configuration>
+    <logger name="org.apache.http" level="WARN" />
+    <logger name="org.apache.http.wire" level="WARN" />
+    <logger name="org.openqa.selenium.remote.ProtocolHandshake" level="WARN" />
+    
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
