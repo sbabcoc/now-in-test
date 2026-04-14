@@ -1,9 +1,12 @@
 package com.github.sbabcoc.nowintest;
 
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
+import com.github.sbabcoc.nowintest.components.ForYouFeedComponent;
+import com.github.sbabcoc.nowintest.components.NewsResourceCard;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.github.sbabcoc.nowintest.page.SavedPage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
@@ -39,5 +42,23 @@ public class SavedPageTest extends TestNgBase {
         SavedPage savedPage = mainPage.getTabBar().openSavedPage();
         assertTrue(savedPage.isBookmarksPlaceholderShown(), "Bookmarks placeholder is not shown");
     }
+    
+    @Test
+    public void testBookmarkHeadlinesTopic() {
+        MainPage mainPage = getInitialPage();
+        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
+        ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
+        forYouFeed.getTopicSelection("Headlines").select();
+        NewsResourceCard resourceCard = forYouFeed.getFirstNewsResourceCard();
+        resourceCard.scrollToSummary();
+        resourceCard.select();
+        assertTrue(resourceCard.isChecked());
+        SavedPage savedPage = mainPage.getTabBar().openSavedPage();
+        assertFalse(savedPage.isBookmarksPlaceholderShown(), "Bookmarks placeholder is shown");
+        resourceCard = savedPage.getFirstNewsResourceCard();
+        assertTrue(resourceCard.isChecked());
+    }
+    
+
     
 }

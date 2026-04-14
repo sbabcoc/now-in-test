@@ -8,6 +8,7 @@ import java.util.Set;
 import org.testng.annotations.Test;
 
 import com.github.sbabcoc.nowintest.components.ForYouFeedComponent;
+import com.github.sbabcoc.nowintest.components.NewsResourceCard;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
@@ -51,7 +52,8 @@ public class MainPageTest extends TestNgBase {
         ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         forYouFeed.getTopicSelection("Headlines").select();
-        ResourcePage resourcePage = forYouFeed.getFirstNewsResourceCard().openResourcePage();
+        NewsResourceCard resourceCard = forYouFeed.getFirstNewsResourceCard();
+        ResourcePage resourcePage = resourceCard.openResourcePage();
         Page backPage = resourcePage.backToNIA();
         Class<?> backPageClass = Enhanceable.getContainerClass(backPage);
         assertTrue(backPageClass.isAssignableFrom(MainPage.class), "Incorrect 'back' page class: " + backPageClass);

@@ -12,7 +12,6 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.google.common.collect.ImmutableMap;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
-import com.nordstrom.automation.selenium.model.Page;
 import com.nordstrom.automation.selenium.model.PageComponent;
 import com.nordstrom.automation.selenium.model.RobustWebElement;
 
@@ -38,7 +37,7 @@ public class NewsResourceCard extends PageComponent {
     protected enum Using implements ByEnum {
         /**  */
         TITLE(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(1)")),
-        BOOKMARK(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.view.View\").index(2)")),
+        BOOKMARK(AppiumBy.androidUIAutomator("new UiSelector().descriptionContains(\"ookmark\")")),
         DATE(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(3)")),
         SUMMARY(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(4)")),
         TOPIC_TAG(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^topicTag:.*\")"));
@@ -115,9 +114,9 @@ public class NewsResourceCard extends PageComponent {
     }
     
     public boolean isChecked() {
-        return Boolean.parseBoolean(findElement(Using.BOOKMARK).getAttribute("checked"));
+        return "Unbookmark".equals(findElement(Using.BOOKMARK).getAttribute("content-desc"));
     }
-
+    
     public void scrollToSummary() {
         int maxTries = 10;
         WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));

@@ -3,6 +3,7 @@ package com.github.sbabcoc.nowintest.components;
 import java.util.Arrays;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
@@ -89,6 +90,14 @@ public class TopicSelection extends PageComponent {
     
     public void toggle() {
         getWrappedElement().click();
+        
+        // FIXME: This should wait for the "busy" indicator
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NoSuchElementException("Interrupted during settle time interval");
+        }
     }
     
     public boolean isChecked() {
