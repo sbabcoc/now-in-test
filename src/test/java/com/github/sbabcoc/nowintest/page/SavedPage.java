@@ -1,7 +1,13 @@
 package com.github.sbabcoc.nowintest.page;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import com.github.sbabcoc.nowintest.components.NewsResourceCard;
+import com.nordstrom.automation.selenium.model.RobustWebElement;
+
 import io.appium.java_client.AppiumBy;
 
 /**
@@ -47,6 +53,24 @@ public class SavedPage extends PageTemplate {
     
     public boolean isBookmarksPlaceholderShown() {
         return !findElements(Using.BOOKMARKS_EMPTY).isEmpty();
+    }
+    
+    public NewsResourceCard getFirstNewsResourceCard() {
+        WebElement card = findElement(Using.NEWS_RESOURCE_CARD);
+        String resourceId = card.getAttribute("resource-id");
+        By scrollingLocator = scrollingLocatorWithResourceId(resourceId);
+        By contextLocator = contextLocatorWithResourceId(resourceId);
+        getParentPage().findElement(scrollingLocator);
+        
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NoSuchElementException("Interrupted during settle time interval");
+        }
+        
+        RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
+        return new NewsResourceCard(scrollingLocator, contextElement, this);
     }
     
     private static By scrollingLocatorWithResourceId(final String resourceId) {

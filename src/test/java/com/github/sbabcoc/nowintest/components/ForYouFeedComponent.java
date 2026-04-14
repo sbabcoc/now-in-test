@@ -52,9 +52,19 @@ public class ForYouFeedComponent extends PageComponent {
     public NewsResourceCard getFirstNewsResourceCard() {
         WebElement card = findElement(Using.NEWS_RESOURCE_CARD);
         String resourceId = card.getAttribute("resource-id");
-        By locator = scrollingLocatorWithResourceId(resourceId);
-        RobustWebElement element = (RobustWebElement) getParentPage().findElement(locator);
-        return new NewsResourceCard(element, this);
+        By scrollingLocator = scrollingLocatorWithResourceId(resourceId);
+        By contextLocator = contextLocatorWithResourceId(resourceId);
+        getParentPage().findElement(scrollingLocator);
+        
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NoSuchElementException("Interrupted during settle time interval");
+        }
+        
+        RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
+        return new NewsResourceCard(scrollingLocator, contextElement, this);
     }
     
     public Set<String> getAllTopics() {
@@ -91,7 +101,7 @@ public class ForYouFeedComponent extends PageComponent {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new NoSuchElementException("Interrupted during settle time pause");
+                throw new NoSuchElementException("Interrupted during settle time interval");
             }
             
             RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);

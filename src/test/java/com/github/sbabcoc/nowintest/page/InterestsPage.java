@@ -97,7 +97,7 @@ public class InterestsPage extends PageTemplate {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new NoSuchElementException("Interrupted during settle time pause");
+                throw new NoSuchElementException("Interrupted during settle time interval");
             }
             
             RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
