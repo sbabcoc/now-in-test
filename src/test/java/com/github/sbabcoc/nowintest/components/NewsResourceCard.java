@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -82,8 +83,15 @@ public class NewsResourceCard extends PageComponent {
     
     public Page openResource() {
         scrollToSummary();
-        ((JavascriptExecutor) driver).executeScript("mobile: clickGesture",
-                ImmutableMap.of("elementId", ((RemoteWebElement) getWrappedElement()).getId()));
+        
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NoSuchElementException("Interrupted during settle time interval");
+        }
+        
+        findElement(Using.SUMMARY.locator).click();
         return new Page(driver);
     }
     
@@ -116,7 +124,6 @@ public class NewsResourceCard extends PageComponent {
                     .anyMatch(WebElement::isDisplayed);
 
             if (isFound || --maxTries <= 0) {
-                
                 break;
             }
 
