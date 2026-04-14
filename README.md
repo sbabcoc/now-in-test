@@ -1,7 +1,6 @@
-* Clone **Now In Android** repository
-  * `git clone --revision=d6abd6d --depth=1 https://github.com/android/nowinandroid.git`
-* Build the application
-  * ```
+* Clone **Now In Android** repository and build the project
+  * ```bash
+    git clone --depth=1 https://github.com/android/nowinandroid.git
     cd nowinandroid
     ./gradlew assembleDebug
     ```
