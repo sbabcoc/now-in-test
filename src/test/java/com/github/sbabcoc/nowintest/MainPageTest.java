@@ -9,8 +9,11 @@ import org.testng.annotations.Test;
 
 import com.github.sbabcoc.nowintest.components.ForYouFeedComponent;
 import com.github.sbabcoc.nowintest.page.MainPage;
+import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
 import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
+import com.nordstrom.automation.selenium.model.Enhanceable;
+import com.nordstrom.automation.selenium.model.Page;
 import com.nordstrom.automation.selenium.support.TestNgBase;
 
 @InitialPage(MainPage.class)
@@ -48,7 +51,10 @@ public class MainPageTest extends TestNgBase {
         ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         forYouFeed.getTopicSelection("Headlines").select();
-        forYouFeed.getFirstNewsResourceCard().openResource();
+        ResourcePage resourcePage = forYouFeed.getFirstNewsResourceCard().openResourcePage();
+        Page backPage = resourcePage.backToNIA();
+        Class<?> backPageClass = Enhanceable.getContainerClass(backPage);
+        assertTrue(backPageClass.isAssignableFrom(MainPage.class), "Incorrect 'back' page class: " + backPageClass);
     }
     
 }

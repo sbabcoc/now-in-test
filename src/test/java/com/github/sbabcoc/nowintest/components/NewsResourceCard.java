@@ -9,6 +9,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
+import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.google.common.collect.ImmutableMap;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.Page;
@@ -81,7 +82,7 @@ public class NewsResourceCard extends PageComponent {
         return getWrappedElement();
     }
     
-    public Page openResource() {
+    public ResourcePage openResourcePage() {
         scrollToSummary();
         
         try {
@@ -92,7 +93,9 @@ public class NewsResourceCard extends PageComponent {
         }
         
         findElement(Using.SUMMARY.locator).click();
-        return new Page(driver);
+        ResourcePage resourcePage = new ResourcePage(driver);
+        resourcePage.setSpawningPage(getParentPage());
+        return resourcePage;
     }
     
     public boolean select() {
