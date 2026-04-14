@@ -146,9 +146,14 @@ public class NewsResourceCard extends PageComponent {
     
     /**
      * Toggle the bookmark state of this news resource card.
+     * 
+     * @return updated bookmark state
      */
-    public void toggle() {
+    public boolean toggle() {
+        boolean initial = isChecked();
         findElement(Using.BOOKMARK).click();
+        getWait().until(context -> ((NewsResourceCard) context).isChecked() != initial);
+        return !initial;
     }
     
     /**
@@ -165,7 +170,7 @@ public class NewsResourceCard extends PageComponent {
      */
     public void scrollToSummary() {
         int maxTries = 10;
-        WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        WebElement container = getParentPage().findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
         while (true) {
             boolean isFound = container.findElements(Using.SUMMARY.locator)
                     .stream()

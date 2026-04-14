@@ -105,7 +105,7 @@ public class InterestsPage extends PageTemplate {
         } else {
             By scrollingLocator = scrollingLocatorWithDescription(topic);
             By contextLocator = contextLocatorWithDescription(topic);
-            getParentPage().findElement(scrollingLocator);
+            findElement(scrollingLocator);
             
             try {
                 Thread.sleep(300);
@@ -114,7 +114,7 @@ public class InterestsPage extends PageTemplate {
                 throw new NoSuchElementException("Interrupted during settle time interval");
             }
             
-            RobustWebElement contextElement = (RobustWebElement) getParentPage().findElement(contextLocator);
+            RobustWebElement contextElement = (RobustWebElement) findElement(contextLocator);
             topicSelection = new TopicSelection(scrollingLocator, contextElement, this);
             topicMap.put(topic, topicSelection);
         }
@@ -136,7 +136,7 @@ public class InterestsPage extends PageTemplate {
      */
     public void reset() {
         int maxTries = 10;
-        WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        WebElement container = findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
         while (true) {
             boolean isFound = container.findElements(AppiumBy.accessibilityId("Data Storage"))
                     .stream()
@@ -159,7 +159,7 @@ public class InterestsPage extends PageTemplate {
      * Scroll the topic selection collection forward.
      */
     private void scrollForward() {
-        getParentPage().findElement(Using.SCROLL_FORWARD.locator);
+        findElement(Using.SCROLL_FORWARD.locator);
     }
     
     /**
