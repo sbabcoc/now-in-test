@@ -1,5 +1,5 @@
 * Clone **Now In Android** repository
-  * `git clone https://github.com/android/nowinandroid.git`
+  * `git clone --revision=d6abd6d --depth=1 https://github.com/android/nowinandroid.git`
 * Build the application
   * ```
     cd nowinandroid
