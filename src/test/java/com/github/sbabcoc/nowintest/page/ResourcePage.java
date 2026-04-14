@@ -8,12 +8,21 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 
+/**
+ * This is a generic model for a news resource page.
+ */
 public class ResourcePage extends Page {
 
     public ResourcePage(WebDriver driver) {
         super(driver);
     }
     
+    /**
+     * Tap the Android BACK key to navigate back to the NIA app.
+     * 
+     * @param <T> landing page type
+     * @return "back" navigation landing page object
+     */
     @SuppressWarnings("unchecked")
     public <T extends Page> T backToNIA() {
         ((AndroidDriver) driver).pressKey(new KeyEvent(AndroidKey.BACK));

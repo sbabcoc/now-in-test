@@ -17,9 +17,15 @@ import com.nordstrom.automation.selenium.model.Enhanceable;
 import com.nordstrom.automation.selenium.model.Page;
 import com.nordstrom.automation.selenium.support.TestNgBase;
 
+/**
+ * This is the test class for the main <b>Now in Android</b> page.
+ */
 @InitialPage(MainPage.class)
 public class MainPageTest extends TestNgBase {
 
+    /**
+     * #1: Ensure application launches and opens the main page.
+     */
     @Test
     public void testLoadComplete() {
         MainPage mainPage = getInitialPage();
@@ -27,6 +33,9 @@ public class MainPageTest extends TestNgBase {
         assertTrue(isLoaded, "Page load incomplete");
     }
     
+    /**
+     * #2: Ensure that the navigation tabs are shown.
+     */
     @Test
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
@@ -36,6 +45,9 @@ public class MainPageTest extends TestNgBase {
         assertTrue(mainPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not shown");
     }
     
+    /**
+     * Ensure that the "For You" feed selectors are displayed.
+     */
     @Test
     public void testForYouFeedIsShownAndPopulated() {
         MainPage mainPage = getInitialPage();
@@ -46,6 +58,15 @@ public class MainPageTest extends TestNgBase {
         assertFalse(topicsMap.isEmpty(), "'For You' feed has no topics");
     }
     
+    /**
+     * #6: Verify feed navigation: <ol>
+     *     <li>Select the "Headlines" topic</li>
+     *     <li>Get the first news resource card</li>
+     *     <li>Open the resource page (implicitly verified)</li>
+     *     <li>Navigate back to the NIA app (implicitly verified)</li>
+     *     <li>Verify that the expected page object type was returned</li>
+     * </ol>
+     */
     @Test
     public void testSelectHeadlinesTopic() {
         MainPage mainPage = getInitialPage();

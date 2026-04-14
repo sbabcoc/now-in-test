@@ -31,9 +31,11 @@ public abstract class PageTemplate extends Page implements DetectsLoadCompletion
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
+        /** compose root container - used as the search context for {@link TabBarComponent} */
         COMPOSE_ROOT(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"android:id/content\")")),
+        /** top app bar container */
 		TOP_APP_BAR(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"niaTopAppBar\")")),
+		/** locator for the "busy" spinner */
 		BUSY_SPINNER(By.xpath("//*[contains(@resource-id, 'loadingWheel') or contains(@content-desc, 'loadingWheel')]"));
         
         private final By locator;
@@ -48,14 +50,30 @@ public abstract class PageTemplate extends Page implements DetectsLoadCompletion
         }
     }
     
+    /**
+     * Get the view title locator.
+     * 
+     * @return {@link By} object used to locate the view title
+     */
     public abstract By usingViewTitle();
 
+    /**
+     * Determine if page load is complete: <ul>
+     *     <li>The expected view title is found</li>
+     *     <li>The "busy" spinner is not found</li>
+     * </ul>
+     */
     @Override
     public boolean isLoadComplete() {
         if (findElements(usingViewTitle()).isEmpty()) return false;
         return findElements(Using.BUSY_SPINNER).isEmpty();
     }
     
+    /**
+     * Get the top app bar page component.
+     * 
+     * @return {@link TopAppBarComponent} object
+     */
     public TopAppBarComponent getTopAppBar() {
     	if (topAppBar == null) {
     		topAppBar = new TopAppBarComponent(Using.TOP_APP_BAR.locator, this);
@@ -63,6 +81,11 @@ public abstract class PageTemplate extends Page implements DetectsLoadCompletion
     	return topAppBar;
     }
     
+    /**
+     * Get the tab bar page component.
+     * 
+     * @return {@link TabBarComponent} object
+     */
     public TabBarComponent getTabBar() {
         if (tabBar == null) {
             tabBar = new TabBarComponent(Using.COMPOSE_ROOT.locator, this);

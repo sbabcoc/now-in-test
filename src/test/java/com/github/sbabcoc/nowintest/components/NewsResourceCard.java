@@ -17,6 +17,9 @@ import com.nordstrom.automation.selenium.model.RobustWebElement;
 
 import io.appium.java_client.AppiumBy;
 
+/**
+ * This class is the news resource card page component.
+ */
 public class NewsResourceCard extends PageComponent {
     
     private Class<?>[] argumentTypes;
@@ -35,11 +38,11 @@ public class NewsResourceCard extends PageComponent {
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
-        TITLE(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(1)")),
+        /** generic locator for the bookmark element (matches both "Bookmark" and "Unbookmark" */
         BOOKMARK(AppiumBy.androidUIAutomator("new UiSelector().descriptionContains(\"ookmark\")")),
-        DATE(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(3)")),
+        /** FIXME: locator for the resource card summary (indexed reference) */
         SUMMARY(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(4)")),
+        /** generic locator for the resource card topic tags */
         TOPIC_TAG(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^topicTag:.*\")"));
         
         private final By locator;
@@ -54,6 +57,14 @@ public class NewsResourceCard extends PageComponent {
         }
     }
     
+    /**
+     * Refresh the underlying search context for this object.
+     * <p>
+     * <b>NOTE</b>: This override reveals the associate news resource card to enable freshening the context element.
+     * 
+     * @param expiration expiration time of context chain
+     * @return refreshed container search context
+     */
     @Override
     public SearchContext refreshContext(long expiration) {
         // if this context is past the expiration
@@ -76,11 +87,21 @@ public class NewsResourceCard extends PageComponent {
         return Arrays.copyOf(arguments, arguments.length);
     }
     
+    /**
+     * Reveal the news resource card associated with this page component.
+     * 
+     * @return page component content element
+     */
     public WebElement reveal() {
         getParentPage().findElement((By) arguments[0]);
         return getWrappedElement();
     }
     
+    /**
+     * Open the resource page associated with this news resource card.
+     * 
+     * @return {@link ResourcePage} object
+     */
     public ResourcePage openResourcePage() {
         scrollToSummary();
         
@@ -97,26 +118,51 @@ public class NewsResourceCard extends PageComponent {
         return resourcePage;
     }
     
+    /**
+     * Set the bookmark on this news resource card.
+     * <p>
+     * <b>NOTE</b>: If the card is already bookmarked, no action is performed.
+     * 
+     * @return {@code true} if the card state changed; otherwise {@code false}
+     */
     public boolean select() {
         if (isChecked()) return false;
         toggle();
         return true;
     }
     
+    /**
+     * Clear the bookmark on this news resource card.
+     * <p>
+     * <b>NOTE</b>: If the card isn't bookmarked, no action is performed.
+     * 
+     * @return {@code true} if the card state changed; otherwise {@code false}
+     */
     public boolean reject() {
         if (!isChecked()) return false;
         toggle();
         return true;
     }
     
+    /**
+     * Toggle the bookmark state of this news resource card.
+     */
     public void toggle() {
         findElement(Using.BOOKMARK).click();
     }
     
+    /**
+     * Determine the current bookmark state of this news resource card.
+     * 
+     * @return {@code true} if the card is bookmarked; otherwise {@code false}
+     */
     public boolean isChecked() {
         return "Unbookmark".equals(findElement(Using.BOOKMARK).getAttribute("content-desc"));
     }
     
+    /**
+     * Scroll to the summary element of this news resource card.
+     */
     public void scrollToSummary() {
         int maxTries = 10;
         WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));

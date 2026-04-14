@@ -13,9 +13,15 @@ import com.nordstrom.automation.selenium.annotations.InitialPage;
 import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
 import com.nordstrom.automation.selenium.support.TestNgBase;
 
+/**
+ * This is the test class for the "Saved" page of <b>Now in Android</b>.
+ */
 @InitialPage(MainPage.class)
 public class SavedPageTest extends TestNgBase {
 
+    /**
+     * Ensure application launches, the main page opens, and "Saved" tab navigation opens the expected page.
+     */
     @Test
     public void testLoadComplete() {
         MainPage mainPage = getInitialPage();
@@ -25,6 +31,9 @@ public class SavedPageTest extends TestNgBase {
         assertTrue(isLoaded, "Page load incomplete");
     }
     
+    /**
+     * Ensure that the navigation tabs are shown.
+     */
     @Test
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
@@ -35,6 +44,9 @@ public class SavedPageTest extends TestNgBase {
         assertTrue(savedPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not displayed");
     }
     
+    /**
+     * Ensure that the "Saved" page shows the "No saved updates" placeholder by default.
+     */
     @Test
     public void testEmptyBookmarks() {
         MainPage mainPage = getInitialPage();
@@ -43,6 +55,19 @@ public class SavedPageTest extends TestNgBase {
         assertTrue(savedPage.isBookmarksPlaceholderShown(), "Bookmarks placeholder is not shown");
     }
     
+    /**
+     * Verify basic bookmark behavior: <ol>
+     *     <li>Select the "Headlines" topic</li>
+     *     <li>Get the first news resource card</li>
+     *     <li>Scroll the resource card into view</li>
+     *     <li>Bookmark the resource card</li>
+     *     <li>Verify that the resource card is bookmarked</li>
+     *     <li>Navigate to the "Saved" view</li>
+     *     <li>Ensure that the "No saved updates" placeholder is not shown</li>
+     *     <li>Get the first news resource card</li>
+     *     <li>Verify that the resource card is bookmarked</li>
+     * </ol>
+     */
     @Test
     public void testBookmarkHeadlinesTopic() {
         MainPage mainPage = getInitialPage();
@@ -58,7 +83,5 @@ public class SavedPageTest extends TestNgBase {
         resourceCard = savedPage.getFirstNewsResourceCard();
         assertTrue(resourceCard.isChecked());
     }
-    
-
     
 }

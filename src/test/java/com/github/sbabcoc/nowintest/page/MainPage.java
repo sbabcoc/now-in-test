@@ -25,13 +25,16 @@ public class MainPage extends PageTemplate {
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
+        /** view title locator */
         VIEW_TITLE(By.xpath("//android.widget.TextView[normalize-space(@text)='Now in Android']")),
+        /**  */
 		FOR_YOU_FEED(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"forYou:feed\")")),
+        /**  */
 		TAB_FOR_YOU(AppiumBy.androidUIAutomator("new UiSelector().text(\"For you\")")),
+        /**  */
 		TAB_SAVED(AppiumBy.androidUIAutomator("new UiSelector().text(\"Saved\")")),
-		TAB_INTERESTS(AppiumBy.androidUIAutomator("new UiSelector().text(\"Interests\")")),
-		BUSY_SPINNER(By.xpath("//*[contains(@resource-id, 'loadingWheel') or contains(@content-desc, 'loadingWheel')]"));
+        /**  */
+		TAB_INTERESTS(AppiumBy.androidUIAutomator("new UiSelector().text(\"Interests\")"));
         
         private final By locator;
         
@@ -50,6 +53,11 @@ public class MainPage extends PageTemplate {
         return Using.VIEW_TITLE.locator;
     }
     
+    /**
+     * Get the "For You" feed page component.
+     * 
+     * @return {@link ForYouFeedComponent} object
+     */
     public ForYouFeedComponent getForYouFeed() {
     	if (forYouFeed == null) {
     		forYouFeed = new ForYouFeedComponent(Using.FOR_YOU_FEED.locator, this);

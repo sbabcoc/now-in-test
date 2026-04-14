@@ -6,6 +6,9 @@ import com.nordstrom.automation.selenium.interfaces.DetectsLoadCompletion;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
 
+/**
+ * This class is the top app bar page component.
+ */
 public class TopAppBarComponent extends PageComponent implements DetectsLoadCompletion<TopAppBarComponent> {
 
     public TopAppBarComponent(By locator, ComponentContainer parent) {

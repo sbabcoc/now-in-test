@@ -18,6 +18,9 @@ import com.nordstrom.automation.selenium.model.RobustWebElement;
 
 import io.appium.java_client.AppiumBy;
 
+/**
+ * This class is the "For You" feed page component.
+ */
 public class ForYouFeedComponent extends PageComponent {
 
     private Set<String> topics;
@@ -31,10 +34,12 @@ public class ForYouFeedComponent extends PageComponent {
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
+        /** common topic checkbox locator (each checkbox declares a unique description) */
         TOPIC_CHECKBOX(By.xpath(".//*[@content-desc]")),
+        /** locator used to scroll the interests collection forward */
         SCROLL_FORWARD(AppiumBy.androidUIAutomator(
             "new UiScrollable(new UiSelector().scrollable(true)).setAsHorizontalList().scrollForward()")),
+        /** common news resource card container (each container declares a unique resource ID) */
         NEWS_RESOURCE_CARD(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^newsResourceCard:.*\")"));
         
         private final By locator;
@@ -49,6 +54,11 @@ public class ForYouFeedComponent extends PageComponent {
         }
     }
     
+    /**
+     * Get the first news resource card in the collection.
+     * 
+     * @return {@link NewsResourceCard} object
+     */
     public NewsResourceCard getFirstNewsResourceCard() {
         WebElement card = findElement(Using.NEWS_RESOURCE_CARD);
         String resourceId = card.getAttribute("resource-id");
@@ -67,6 +77,11 @@ public class ForYouFeedComponent extends PageComponent {
         return new NewsResourceCard(scrollingLocator, contextElement, this);
     }
     
+    /**
+     * Get the titles of every topic selection element.
+     *  
+     * @return set of topic titles
+     */
     public Set<String> getAllTopics() {
         if (topics == null) {
             reset();
@@ -84,6 +99,12 @@ public class ForYouFeedComponent extends PageComponent {
         return Collections.unmodifiableSet(topics);
     }
     
+    /**
+     * Get the topic selection object with the specified title.
+     * 
+     * @param topic topic selection title
+     * @return {@link TopicSelection} object
+     */
     public TopicSelection getTopicSelection(final String topic) {
         TopicSelection topicSelection = null;
         if (!getAllTopics().contains(topic)) {
@@ -111,6 +132,9 @@ public class ForYouFeedComponent extends PageComponent {
         return topicSelection;
     }
 
+    /**
+     * Collect the set of currently visible topic title.
+     */
     private void collectVisible() {
         findElements(Using.TOPIC_CHECKBOX).stream()
                 .map(e -> e.getAttribute("content-desc"))
@@ -118,6 +142,9 @@ public class ForYouFeedComponent extends PageComponent {
                 .forEach(topics::add);
     }
 
+    /**
+     * Reset the topic selection collection, returning to the leftmost position.
+     */
     public void reset() {
         int maxTries = 10;
         WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
@@ -139,26 +166,53 @@ public class ForYouFeedComponent extends PageComponent {
         }
     }
 
+    /**
+     * Scroll the topic selection collection forward.
+     */
     private void scrollForward() {
         getParentPage().findElement(Using.SCROLL_FORWARD);
     }
     
+    /**
+     * Get the scrolling locator that will reveal the described topic selection element.
+     * 
+     * @param description desired topic selection description
+     * @return scrolling locator to reveal the described topic selection element
+     */
     private static By scrollingLocatorWithDescription(final String description) {
         return AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().description(\""
                         + description + "\"))");
     }
     
+    /**
+     * Get the context locator for the described topic selection element.
+     * 
+     * @param description desired topic selection description
+     * @return context locator for the described topic selection element
+     */
     private static By contextLocatorWithDescription(final String description) {
         return AppiumBy.xpath("//*[@content-desc='" + description + "']/parent::*");
     }
     
+    /**
+     * Get the scrolling locator that will reveal the identified topic selection element.
+     * 
+     * @param resourceId desired topic selection identifier
+     * @return scrolling locator to reveal the identified topic selection element
+     */
     private static By scrollingLocatorWithResourceId(final String resourceId) {
         return AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(\""
                         + resourceId + "\"))");
     }
     
+    /**
+     * Get the context locator for the identified topic selection element.
+     * 
+     * @param resourceId desired topic selection identifier
+     * @return context locator for the identified topic selection element
+     */
     private static By contextLocatorWithResourceId(final String resourceId) {
         return AppiumBy.xpath("//*[@resource-id='" + resourceId + "']/parent::*");
     }

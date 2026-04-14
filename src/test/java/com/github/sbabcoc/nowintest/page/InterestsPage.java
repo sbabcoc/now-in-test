@@ -20,6 +20,8 @@ import io.appium.java_client.AppiumBy;
 
 /**
  * This class is the model for the <b>Interests</b> view of the <b>Now in Android</b> app.
+ * <p>
+ * <b>NOTE</b>: This class extends {@link PageTemplate}, which provides common features.
  */
 public class InterestsPage extends PageTemplate {
     
@@ -39,10 +41,11 @@ public class InterestsPage extends PageTemplate {
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
+        /** view title locator */
         VIEW_TITLE(By.xpath("//android.widget.TextView[normalize-space(@text)='Interests']")),
-        INTERESTS_TOPIC(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"interests:topic\")")),
+        /** common topic checkbox locator (each checkbox declares a unique description) */
         TOPIC_CHECKBOX(By.xpath(".//*[@content-desc]")),
+        /** locator used to scroll the interests collection forward */
         SCROLL_FORWARD(AppiumBy.androidUIAutomator(
             "new UiScrollable(new UiSelector().scrollable(true)).setAsVerticalList().scrollForward()"));
         
@@ -63,7 +66,12 @@ public class InterestsPage extends PageTemplate {
         return Using.VIEW_TITLE.locator;
     }
     
-    public Set<String> getTopics() {
+    /**
+     * Get the titles of every topic selection element.
+     *  
+     * @return set of topic titles
+     */
+    public Set<String> getAllTopics() {
         if (topics == null) {
             reset();
             String lastSnapshot = "";
@@ -80,9 +88,15 @@ public class InterestsPage extends PageTemplate {
         return Collections.unmodifiableSet(topics);
     }
 
+    /**
+     * Get the topic selection object with the specified title.
+     * 
+     * @param topic topic selection title
+     * @return {@link TopicSelection} object
+     */
     public TopicSelection getTopicSelection(final String topic) {
         TopicSelection topicSelection = null;
-        if (!getTopics().contains(topic)) {
+        if (!getAllTopics().contains(topic)) {
             throw new IllegalArgumentException("Unrecognized topic: " + topic);
         }
         if (topicMap.containsKey(topic)) {
@@ -107,6 +121,9 @@ public class InterestsPage extends PageTemplate {
         return topicSelection;
     }
 
+    /**
+     * Collect the set of currently visible topic title.
+     */
     private void collectVisible() {
         findElements(Using.TOPIC_CHECKBOX).stream()
                 .map(e -> e.getAttribute("content-desc"))
@@ -114,6 +131,9 @@ public class InterestsPage extends PageTemplate {
                 .forEach(topics::add);
     }
 
+    /**
+     * Reset the topic selection collection, returning to the topmost position.
+     */
     public void reset() {
         int maxTries = 10;
         WebElement container = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
@@ -135,16 +155,31 @@ public class InterestsPage extends PageTemplate {
         }
     }
 
+    /**
+     * Scroll the topic selection collection forward.
+     */
     private void scrollForward() {
         getParentPage().findElement(Using.SCROLL_FORWARD.locator);
     }
     
+    /**
+     * Get the scrolling locator that will reveal the described topic selection element.
+     * 
+     * @param description desired topic selection description
+     * @return scrolling locator to reveal the described topic selection element
+     */
     private static By scrollingLocatorWithDescription(final String description) {
         return AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().description(\""
                         + description + "\"))");
     }
     
+    /**
+     * Get the context locator for the described topic selection element.
+     * 
+     * @param description desired topic selection description
+     * @return context locator for the described topic selection element
+     */
     private static By contextLocatorWithDescription(final String description) {
         return AppiumBy.xpath("//*[@content-desc='" + description + "']/parent::*");
     }

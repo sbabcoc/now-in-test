@@ -28,10 +28,13 @@ public class SavedPage extends PageTemplate {
      * This enumeration defines element locator constants.
      */
     protected enum Using implements ByEnum {
-        /**  */
+        /** view title locator */
         VIEW_TITLE(By.xpath("//android.widget.TextView[normalize-space(@text)='Saved']")),
+        /** locator for bookmarks feed container element */
         BOOKMARKS_FEED(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"bookmarks:feed\")")),
+        /** locator for "No saved updates" placeholder */
         BOOKMARKS_EMPTY(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"bookmarks:empty\")")),
+        /** common news resource card container (each container declares a unique resource ID) */
         NEWS_RESOURCE_CARD(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^newsResourceCard:.*\")"));
         
         private final By locator;
@@ -51,10 +54,20 @@ public class SavedPage extends PageTemplate {
         return Using.VIEW_TITLE.locator;
     }
     
+    /**
+     * Determine if the "No saved updates" placeholder is shown.
+     * 
+     * @return {@code true} if placeholder is shown; otherwise {@code false}
+     */
     public boolean isBookmarksPlaceholderShown() {
         return !findElements(Using.BOOKMARKS_EMPTY).isEmpty();
     }
     
+    /**
+     * Get the first news resource card in the collection.
+     * 
+     * @return {@link NewsResourceCard} object
+     */
     public NewsResourceCard getFirstNewsResourceCard() {
         WebElement card = findElement(Using.NEWS_RESOURCE_CARD);
         String resourceId = card.getAttribute("resource-id");
@@ -73,12 +86,24 @@ public class SavedPage extends PageTemplate {
         return new NewsResourceCard(scrollingLocator, contextElement, this);
     }
     
+    /**
+     * Get the scrolling locator that will reveal the identified topic selection element.
+     * 
+     * @param resourceId desired topic selection identifier
+     * @return scrolling locator to reveal the identified topic selection element
+     */
     private static By scrollingLocatorWithResourceId(final String resourceId) {
         return AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(\""
                         + resourceId + "\"))");
     }
     
+    /**
+     * Get the context locator for the identified topic selection element.
+     * 
+     * @param resourceId desired topic selection identifier
+     * @return context locator for the identified topic selection element
+     */
     private static By contextLocatorWithResourceId(final String resourceId) {
         return AppiumBy.xpath("//*[@resource-id='" + resourceId + "']/parent::*");
     }
