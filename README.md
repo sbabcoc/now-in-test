@@ -1,6 +1,6 @@
 # now-in-test
 
-This repository implements a set of user interface tests the target the [**Now in Android**](https://github.com/android/nowinandroid) sample application from **Google**. 
+This repository implements a set of user interface tests that target the [**Now in Android**](https://github.com/android/nowinandroid) sample application from **Google**. 
 
 ## Prerequisites
 * Ensure that required development environment is installed and configured
