@@ -64,8 +64,11 @@ public class InterestsPageTest extends TestNgBase {
     
     /**
      * Verify topic selection behavior: <ol>
+     *     <li>Get the list of topics</li>
      *     <li>Select the "Compose" topic</li>
      *     <li>Navigate to the "Interests" view</li>
+     *     <li>Verify that the "Compose" topic is selected</li>
+     *     <li>Verify that the topics list matches the list from the main page</li>
      * </ol>
      */
     @Test

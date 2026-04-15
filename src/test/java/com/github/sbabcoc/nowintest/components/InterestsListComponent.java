@@ -35,7 +35,7 @@ public class InterestsListComponent extends PageComponent {
      */
     protected enum Using implements ByEnum {
         /** common topic textview locator (each textview declares a unique label) */
-        TOPIC_TEXTVIEW(AppiumBy.className("android.widget.TextView")),
+        TOPIC_TEXTVIEW(AppiumBy.xpath("//android.view.View/android.widget.TextView[1]")),
         /** locator used to scroll the interests collection forward */
         SCROLL_FORWARD(AppiumBy.androidUIAutomator(
             "new UiScrollable(new UiSelector().scrollable(true)).setAsVerticalList().scrollForward()"));

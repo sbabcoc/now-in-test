@@ -3,7 +3,6 @@ package com.github.sbabcoc.nowintest.page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import com.github.sbabcoc.nowintest.components.ForYouFeedComponent;
 import com.github.sbabcoc.nowintest.components.InterestsListComponent;
 import io.appium.java_client.AppiumBy;
 
