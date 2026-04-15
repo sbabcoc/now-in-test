@@ -1,6 +1,10 @@
 package com.github.sbabcoc.nowintest.page;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import com.github.sbabcoc.nowintest.components.TabBarComponent;
 import com.github.sbabcoc.nowintest.components.TopAppBarComponent;
@@ -36,7 +40,7 @@ public abstract class PageTemplate extends Page implements DetectsLoadCompletion
         /** top app bar container */
 		TOP_APP_BAR(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"niaTopAppBar\")")),
 		/** locator for the "busy" spinner */
-		BUSY_SPINNER(By.xpath("//*[contains(@resource-id, 'loadingWheel') or contains(@content-desc, 'loadingWheel')]"));
+		BUSY_SPINNER(AppiumBy.xpath("//*[contains(@resource-id, 'loadingWheel') or contains(@content-desc, 'loadingWheel')]"));
         
         private final By locator;
         
@@ -91,5 +95,20 @@ public abstract class PageTemplate extends Page implements DetectsLoadCompletion
             tabBar = new TabBarComponent(Using.COMPOSE_ROOT.locator, this);
         }
         return tabBar;
+    }
+    
+    /**
+     * Scroll to the top of the current view.
+     */
+    public void scrollToTop() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("direction", "up");
+        params.put("percent", 1.0);
+
+        boolean scrolled = true;
+        while (scrolled) {
+            Object result = ((JavascriptExecutor) driver).executeScript("mobile: scroll", params);
+            scrolled = Boolean.TRUE.equals(result);
+        }
     }
 }

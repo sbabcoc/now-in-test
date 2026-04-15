@@ -26,15 +26,9 @@ public class MainPage extends PageTemplate {
      */
     protected enum Using implements ByEnum {
         /** view title locator */
-        VIEW_TITLE(By.xpath("//android.widget.TextView[normalize-space(@text)='Now in Android']")),
-        /**  */
-		FOR_YOU_FEED(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"forYou:feed\")")),
-        /**  */
-		TAB_FOR_YOU(AppiumBy.androidUIAutomator("new UiSelector().text(\"For you\")")),
-        /**  */
-		TAB_SAVED(AppiumBy.androidUIAutomator("new UiSelector().text(\"Saved\")")),
-        /**  */
-		TAB_INTERESTS(AppiumBy.androidUIAutomator("new UiSelector().text(\"Interests\")"));
+        VIEW_TITLE(AppiumBy.xpath("//android.widget.TextView[normalize-space(@text)='Now in Android']")),
+        /** locator for the "For you" feed component container */
+		FOR_YOU_FEED(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"forYou:feed\")"));
         
         private final By locator;
         

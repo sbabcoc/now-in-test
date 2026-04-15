@@ -82,7 +82,7 @@ public class ForYouFeedComponent extends PageComponent {
      *  
      * @return set of topic titles
      */
-    public Set<String> getAllTopics() {
+    public Set<String> getTopicsList() {
         if (topics == null) {
             reset();
             String lastSnapshot = "";
@@ -107,7 +107,7 @@ public class ForYouFeedComponent extends PageComponent {
      */
     public TopicSelection getTopicSelection(final String topic) {
         TopicSelection topicSelection = null;
-        if (!getAllTopics().contains(topic)) {
+        if (!getTopicsList().contains(topic)) {
             throw new IllegalArgumentException("Unrecognized topic: " + topic);
         }
         if (topicMap.containsKey(topic)) {

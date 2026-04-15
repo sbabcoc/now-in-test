@@ -29,7 +29,7 @@ public class SavedPage extends PageTemplate {
      */
     protected enum Using implements ByEnum {
         /** view title locator */
-        VIEW_TITLE(By.xpath("//android.widget.TextView[normalize-space(@text)='Saved']")),
+        VIEW_TITLE(AppiumBy.xpath("//android.widget.TextView[normalize-space(@text)='Saved']")),
         /** locator for bookmarks feed container element */
         BOOKMARKS_FEED(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"bookmarks:feed\")")),
         /** locator for "No saved updates" placeholder */

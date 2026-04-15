@@ -9,6 +9,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
+import com.github.sbabcoc.nowintest.page.PageTemplate;
 import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.google.common.collect.ImmutableMap;
 import com.nordstrom.automation.selenium.model.ComponentContainer;
@@ -69,6 +70,8 @@ public class NewsResourceCard extends PageComponent {
     public SearchContext refreshContext(long expiration) {
         // if this context is past the expiration
         if (expiration >= acquiredAt()) {
+            // scroll to the top of the view
+            ((PageTemplate) getParentPage()).scrollToTop();
             // reveal this topic selection
             reveal();
             // continue with standard refresh

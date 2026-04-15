@@ -3,13 +3,14 @@ package com.github.sbabcoc.nowintest.components;
 import java.util.Arrays;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import com.nordstrom.automation.selenium.model.ComponentContainer;
 import com.nordstrom.automation.selenium.model.PageComponent;
 import com.nordstrom.automation.selenium.model.RobustWebElement;
+
+import io.appium.java_client.AppiumBy;
 
 /**
  * This class is the topic selection page component.
@@ -33,9 +34,13 @@ public class TopicSelection extends PageComponent {
      */
     protected enum Using implements ByEnum {
         /** locator for topic selection title */
-        TOPIC_TITLE(By.className("android.widget.TextView")),
+        TOPIC_TITLE(AppiumBy.className("android.widget.TextView")),
+        /**  */
+        CHECKBOX(AppiumBy.className("android.widget.CheckBox")),
+        /**  */
+        CHECK_STATE(AppiumBy.xpath(".//android.widget.CheckBox/..")),
         /** locator for topic selection "busy" spinner */
-        BUSY_SPINNER(By.className("android.widget.ProgressBar"));
+        BUSY_SPINNER(AppiumBy.className("android.widget.ProgressBar"));
         
         private final By locator;
         
@@ -91,9 +96,9 @@ public class TopicSelection extends PageComponent {
     }
     
     /**
-     * Set the bookmark on this topic selection element.
+     * Set the checked on this topic selection element.
      * <p>
-     * <b>NOTE</b>: If the element is already bookmarked, no action is performed.
+     * <b>NOTE</b>: If the element is already checked, no action is performed.
      * 
      * @return {@code true} if the element state changed; otherwise {@code false}
      */
@@ -104,9 +109,9 @@ public class TopicSelection extends PageComponent {
     }
     
     /**
-     * Clear the bookmark on this topic selection element.
+     * Clear the checked on this topic selection element.
      * <p>
-     * <b>NOTE</b>: If the element isn't bookmarked, no action is performed.
+     * <b>NOTE</b>: If the element isn't checked, no action is performed.
      * 
      * @return {@code true} if the element state changed; otherwise {@code false}
      */
@@ -117,27 +122,24 @@ public class TopicSelection extends PageComponent {
     }
     
     /**
-     * Toggle the bookmark state of this topic selection element.
+     * Toggle the checked state of this topic selection element.
+     * 
+     * @return updated  state
      */
-    public void toggle() {
-        getWrappedElement().click();
-        
-        // FIXME: This should wait for the "busy" indicator
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new NoSuchElementException("Interrupted during settle time interval");
-        }
+    public boolean toggle() {
+        boolean initial = isChecked();
+        findElement(Using.CHECKBOX).click();
+        getWait().until(context -> ((TopicSelection) context).isChecked() != initial);
+        return !initial;
     }
     
     /**
-     * Determine the current bookmark state of this topic selection element.
+     * Determine the current checked state of this topic selection element.
      * 
-     * @return {@code true} if the element is bookmarked; otherwise {@code false}
+     * @return {@code true} if the element is checked; otherwise {@code false}
      */
     public boolean isChecked() {
-        return Boolean.parseBoolean(getWrappedElement().getAttribute("checked"));
+        return Boolean.parseBoolean(findElement(Using.CHECK_STATE).getAttribute("checked"));
     }
     
     /**
