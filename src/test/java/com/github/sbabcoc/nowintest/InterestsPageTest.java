@@ -14,7 +14,6 @@ import com.github.sbabcoc.nowintest.components.TopicSelection;
 import com.github.sbabcoc.nowintest.page.InterestsPage;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
-import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
 import com.nordstrom.automation.selenium.support.TestNgBase;
 
 /**
@@ -29,7 +28,6 @@ public class InterestsPageTest extends TestNgBase {
     @Test
     public void testLoadComplete() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         InterestsPage interestsPage = mainPage.getTabBar().openInterestsPage();
         boolean isLoaded = interestsPage.isLoadComplete();
         assertTrue(isLoaded, "Page load incomplete");
@@ -41,7 +39,6 @@ public class InterestsPageTest extends TestNgBase {
     @Test
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         InterestsPage interestsPage = mainPage.getTabBar().openInterestsPage();
         assertTrue(interestsPage.getTabBar().isForYouTabShown(), "'For you' tab is not displayed");
         assertTrue(interestsPage.getTabBar().isSavedTabShown(), "'Saved' tab is not displayed");
@@ -54,7 +51,6 @@ public class InterestsPageTest extends TestNgBase {
     @Test
     public void testInterestsListIsShownAndPopulated() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         InterestsPage interestsPage = mainPage.getTabBar().openInterestsPage();
         InterestsListComponent interestsList = interestsPage.getInterestsList();
         assertTrue(interestsList.isDisplayed(), "Interest list is not shown");
@@ -74,7 +70,6 @@ public class InterestsPageTest extends TestNgBase {
     @Test
     public void testSelectComposeTopic() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         Set<String> topicsList = forYouFeed.getTopicsList();
         forYouFeed.getTopicSelection("Compose").select();

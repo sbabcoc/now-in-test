@@ -10,7 +10,6 @@ import com.github.sbabcoc.nowintest.components.NewsResourceCard;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.github.sbabcoc.nowintest.page.SavedPage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
-import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
 import com.nordstrom.automation.selenium.support.TestNgBase;
 
 /**
@@ -25,7 +24,6 @@ public class SavedPageTest extends TestNgBase {
     @Test
     public void testLoadComplete() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         SavedPage savedPage = mainPage.getTabBar().openSavedPage();
         boolean isLoaded = savedPage.isLoadComplete();
         assertTrue(isLoaded, "Page load incomplete");
@@ -37,7 +35,6 @@ public class SavedPageTest extends TestNgBase {
     @Test
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         SavedPage savedPage = mainPage.getTabBar().openSavedPage();
         assertTrue(savedPage.getTabBar().isForYouTabShown(), "'For you' tab is not displayed");
         assertTrue(savedPage.getTabBar().isSavedTabShown(), "'Saved' tab is not displayed");
@@ -50,7 +47,6 @@ public class SavedPageTest extends TestNgBase {
     @Test
     public void testEmptyBookmarks() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         SavedPage savedPage = mainPage.getTabBar().openSavedPage();
         assertTrue(savedPage.isBookmarksPlaceholderShown(), "Bookmarks placeholder is not shown");
     }
@@ -71,7 +67,6 @@ public class SavedPageTest extends TestNgBase {
     @Test
     public void testBookmarkHeadlinesTopic() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         forYouFeed.getTopicSelection("Headlines").select();
         NewsResourceCard resourceCard = forYouFeed.getFirstNewsResourceCard();

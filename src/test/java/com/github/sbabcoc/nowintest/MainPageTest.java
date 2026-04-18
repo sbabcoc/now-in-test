@@ -12,7 +12,6 @@ import com.github.sbabcoc.nowintest.components.NewsResourceCard;
 import com.github.sbabcoc.nowintest.page.MainPage;
 import com.github.sbabcoc.nowintest.page.ResourcePage;
 import com.nordstrom.automation.selenium.annotations.InitialPage;
-import com.nordstrom.automation.selenium.model.ContainerMethodInterceptor;
 import com.nordstrom.automation.selenium.model.Enhanceable;
 import com.nordstrom.automation.selenium.model.Page;
 import com.nordstrom.automation.selenium.support.TestNgBase;
@@ -29,7 +28,7 @@ public class MainPageTest extends TestNgBase {
     @Test
     public void testLoadComplete() {
         MainPage mainPage = getInitialPage();
-        boolean isLoaded = ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
+        boolean isLoaded = mainPage.isLoadComplete();
         assertTrue(isLoaded, "Page load incomplete");
     }
     
@@ -39,7 +38,6 @@ public class MainPageTest extends TestNgBase {
     @Test
     public void testNavigationTabsAreShown() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         assertTrue(mainPage.getTabBar().isForYouTabShown(), "'For you' tab is not shown");
         assertTrue(mainPage.getTabBar().isSavedTabShown(), "'Saved' tab is not shown");
         assertTrue(mainPage.getTabBar().isInterestsTabShown(), "'Interests' tab is not shown");
@@ -51,7 +49,6 @@ public class MainPageTest extends TestNgBase {
     @Test
     public void testForYouFeedIsShownAndPopulated() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         assertTrue(forYouFeed.isDisplayed(), "'For You' feed is not shown");
         Set<String> topicsMap = forYouFeed.getTopicsList();
@@ -70,7 +67,6 @@ public class MainPageTest extends TestNgBase {
     @Test
     public void testSelectHeadlinesTopic() {
         MainPage mainPage = getInitialPage();
-        ContainerMethodInterceptor.waitForLoadCompletion(mainPage);
         ForYouFeedComponent forYouFeed = mainPage.getForYouFeed();
         forYouFeed.getTopicSelection("Headlines").select();
         NewsResourceCard resourceCard = forYouFeed.getFirstNewsResourceCard();
