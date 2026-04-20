@@ -1,6 +1,7 @@
 package com.github.sbabcoc.nowintest.components;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -42,7 +43,7 @@ public class NewsResourceCard extends PageComponent {
         /** generic locator for the bookmark element (matches both "Bookmark" and "Unbookmark" */
         BOOKMARK(AppiumBy.androidUIAutomator("new UiSelector().descriptionContains(\"ookmark\")")),
         /** FIXME: locator for the resource card summary (indexed reference) */
-        SUMMARY(AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.TextView\").index(4)")),
+        SUMMARY(AppiumBy.xpath(".//android.widget.HorizontalScrollView/preceding-sibling::*")),
         /** generic locator for the resource card topic tags */
         TOPIC_TAG(AppiumBy.androidUIAutomator("new UiSelector().resourceIdMatches(\"^topicTag:.*\")"));
         
@@ -107,14 +108,6 @@ public class NewsResourceCard extends PageComponent {
      */
     public ResourcePage openResourcePage() {
         scrollToSummary();
-        
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new NoSuchElementException("Interrupted during settle time interval");
-        }
-        
         findElement(Using.SUMMARY.locator).click();
         ResourcePage resourcePage = new ResourcePage(driver);
         resourcePage.setSpawningPage(getParentPage());
@@ -173,22 +166,34 @@ public class NewsResourceCard extends PageComponent {
      */
     public void scrollToSummary() {
         int maxTries = 10;
-        WebElement container = getParentPage().findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        RemoteWebElement container = (RemoteWebElement) getParentPage()
+                .findElement(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        
         while (true) {
-            boolean isFound = container.findElements(Using.SUMMARY.locator)
-                    .stream()
-                    .anyMatch(WebElement::isDisplayed);
+            Optional<WebElement> fullyVisible = findElements(Using.SUMMARY.locator).stream().filter(el -> {
+                if (!el.isDisplayed()) return false;
+                int containerBottom = container.getRect().y + container.getRect().height;
+                int elementCenter = el.getRect().y + (el.getRect().height / 2);
+                return elementCenter < containerBottom;
+            }).findFirst();
 
-            if (isFound || --maxTries <= 0) {
-                break;
+            if (fullyVisible.isPresent() || --maxTries <= 0) {
+                return; 
             }
 
-            ((JavascriptExecutor) driver).executeScript("mobile: swipeGesture", ImmutableMap.of(
-                "elementId", ((RemoteWebElement) container).getId(),
-                "direction", "up",
-                "percent", 0.5,
-                "speed", 1500
+            ((JavascriptExecutor) driver).executeScript("mobile: scrollGesture", ImmutableMap.of(
+                "elementId", container.getId(),
+                "direction", "down",
+                "percent", 0.2,
+                "speed", 500
             ));
+            
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new NoSuchElementException("Interrupted during settle time interval");
+            }
         }
     }
 }
