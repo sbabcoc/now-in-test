@@ -20,7 +20,7 @@ This repository implements a set of user interface tests that target the [**Now 
   appium driver install uiautomator2
   ```
 * Configure environment variables
-  * **ANDROID_HOME**: Point this to your Android SDK folder (e.g., `C:\Users\Name\AppData\Local\Android\Sdk` on Windows or `~/Library/Android/sdk on Mac`).
+  * **ANDROID_HOME**: Point this to your Android SDK folder (e.g., `C:\Users\Name\AppData\Local\Android\Sdk` on Windows or `~/Library/Android/sdk` on Mac).
   * **PATH Additions**: Add `%ANDROID_HOME%\platform-tools`, `%ANDROID_HOME%\emulator`, and `%JAVA_HOME%\bin` to your system's **PATH** variable
   ## Install this project
 * Clone the **now-in-test** repository
