@@ -57,7 +57,7 @@ The **now-in-test** project is build on the [Selenium Foundation](https://github
 
 * **Wait/Sync**: Every action is followed by explicit validation that the expected outcome of the action is observed. This strategy improves stability and efficiency. It also ensures that tests are terminated immediately at the point where the target application exhibits unexpected behavior.
 * **Locators**: I used locators based on resource identifiers or descriptions where possible. I also avoided multi-node specification unless there was no other choice, as these sorts of structural dependencies are prone to breakage.
-* **Break Risk**: The universe of changed that can trigger automation failures is vast:
+* **Break Risk**: The universe of changes that can trigger automation failures is vast:
   * Changes in page layout or element hierarchy;
   * Alterations to element attributes;
   * Addition/removal/refactoring of features;
