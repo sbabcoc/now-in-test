@@ -9,7 +9,7 @@ This repository implements a set of user interface tests that target the [**Now 
   * **Android Studio (for Android)**: Download from the [Android Studio page](https://developer.android.com/studio).
     * Use the **SDK Manager** to install "Android SDK Platform-Tools" and "Build-Tools".
     * Use the **Device Manager** to create and launch a **Pixel 3a** emulator with **API 34**
-* Install Appium Server
+* Install Appium Server  
   Appium is now installed globally via npm. Open your terminal or command prompt and run:**Appium**
   ```bash
   npm install -g appium
