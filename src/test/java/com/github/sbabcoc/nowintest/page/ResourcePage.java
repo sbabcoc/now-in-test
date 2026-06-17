@@ -2,16 +2,24 @@ package com.github.sbabcoc.nowintest.page;
 
 import org.openqa.selenium.WebDriver;
 
+import com.nordstrom.automation.selenium.interfaces.DetectsLoadCompletion;
 import com.nordstrom.automation.selenium.model.Page;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.appmanagement.ApplicationState;
 
 /**
  * This is a generic model for a news resource page.
  */
-public class ResourcePage extends Page {
+public class ResourcePage extends Page implements DetectsLoadCompletion<ResourcePage> {
+
+    @Override
+    public boolean isLoadComplete() {
+        ApplicationState state = ((AndroidDriver) driver).queryAppState("com.google.samples.apps.nowinandroid.demo.debug");
+        return state == ApplicationState.RUNNING_IN_BACKGROUND;
+    }
 
     public ResourcePage(WebDriver driver) {
         super(driver);
