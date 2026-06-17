@@ -21,14 +21,14 @@ tasks.named('clean') {
 }
 
 dependencies {
-    implementation 'com.nordstrom.ui-tools:selenium-foundation:35.0.4-s4'
+    implementation 'com.nordstrom.ui-tools:selenium-foundation:35.0.5-s4'
     implementation('io.appium:java-client:10.0.0') {
       exclude group: 'org.seleniumhq.selenium', module: 'selenium-java'
       exclude group: 'org.seleniumhq.selenium', module: 'selenium-support'
       exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     testImplementation 'org.slf4j:slf4j-simple:2.0.13'
-    testImplementation 'com.nordstrom.ui-tools:selenium-grid-manager:35.0.4-s4'
+    testImplementation 'com.nordstrom.ui-tools:selenium-grid-manager:35.0.5-s4'
 }
 
 test {
